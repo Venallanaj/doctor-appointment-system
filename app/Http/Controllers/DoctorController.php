@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Department;
+use App\User;
+
 class DoctorController extends Controller
 {
     /**
@@ -12,9 +14,12 @@ class DoctorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('admin.doctor.index');
-    }
+      {
+    
+        $users= User::get();
+        return view('admin.doctor.index', compact('users'));
+        
+      }
 
     /**
      * Show the form for creating a new resource.
@@ -57,7 +62,7 @@ class DoctorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
+    {   
         return view('admin.doctor.create');
     }
 
@@ -68,7 +73,7 @@ class DoctorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
+    {  
         return view('admin.doctor.create');
     }
 
