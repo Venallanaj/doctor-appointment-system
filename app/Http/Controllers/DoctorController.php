@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Department;
 class DoctorController extends Controller
 {
     /**
@@ -13,7 +13,7 @@ class DoctorController extends Controller
      */
     public function index()
     {
-        return view('admin.doctor.create');
+        return view('admin.doctor.index');
     }
 
     /**
@@ -32,11 +32,24 @@ class DoctorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        return view('admin.doctor.create');
+    public function store(Request $request){
+
+        $this->validateStore($request);
+        $data = $request->all();
+        $image = $request->file('image');
+        $name = $request->hashName();
+        $destination = public_path('/images');
+        $image=move( $destination,$name);
+        
+        $data['image'] = $name;
+        $data['password'] = bcrypt($request->password);
+        User::create($data);
+        return redirect()->back()->with('message', 'Doctor added successfully');
+
+   
     }
 
+    
     /**
      * Display the specified resource.
      *
@@ -79,6 +92,24 @@ class DoctorController extends Controller
      */
     public function destroy($id)
     {
-        //
+       
+    }
+
+    public function validateStore($request){
+
+       return  $this->validate($request,[
+            'name' => 'required',
+            'email' => 'required|unique:users',
+            'password' => 'required|min:6|max:25',
+            'gender' => 'required',
+            'education' => 'required',
+            'address' => 'required',
+            'department'=>'required',
+            'image'=>'required|mimes:jpeg,jpg,png',
+            'role_id'=>'required',
+            'phone_number'=>'required|numeric',
+            'description'=>'required'
+        ]);
+
     }
 }
